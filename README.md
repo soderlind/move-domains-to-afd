@@ -6,7 +6,7 @@ I highly recommend that you test the scripts below on your test platform in Azur
 
 ## Prerequisite
 
-## Tools
+### Tools
 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), aka `az`
 - [jq](https://stedolan.github.io/jq/), a lightweight and flexible command-line JSON processor. jq is installed in the [Azure Shell](https://shell.azure.com/) (bash)
