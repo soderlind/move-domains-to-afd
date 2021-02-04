@@ -8,8 +8,12 @@ I highly recommend that you test the scripts below on your test platform in Azur
 
 ### Tools
 
+Either use [Azure Shell](https://shell.azure.com/) (bash)
+
+Or install
+
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), aka `az`
-- [jq](https://stedolan.github.io/jq/), a lightweight and flexible command-line JSON processor. jq is installed in the [Azure Shell](https://shell.azure.com/) (bash)
+- [jq](https://stedolan.github.io/jq/), a lightweight and flexible command-line JSON processor.
 
 ### Domains must be moved to Azure DNS.
 
