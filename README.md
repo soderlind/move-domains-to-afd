@@ -19,8 +19,9 @@ Or install
 
 I moved the domains using the following script
 
-- Add 3 sub folders, `ok`, `failed` and `zones`. In `zones`, add a zone file per domain in the format `domain.tld`. If the import fails for a zone file, fix the file and put it back into `zones` and run the script again.
+- Add 3 sub folders, `ok`, `failed` and `zones`. In `zones`, add a zone file per domain in the format `domain.tld`. If the import fails for a zone file, it lands in `failed`. Fix the file and put it back into `zones` and run the script again.
 - Log in to Azure: `az login`
+- Run the script.
 
 
 ```shell
@@ -46,7 +47,7 @@ done
 
 - After you've created the zones in Azure DNS, get the nameservers per zone and tell the registrar to change them.
 
-The `az` cli command below will create a csv-file, with zone and nameservers per line.
+The `az` command below will create a csv-file, with zone and nameservers per line.
 
 ```shell
 az network dns zone list --resource-group MY-DNS-RG --output json | jq -r '[.[] | {zone: .name, nameservers: .nameServers[]}] | map({zone,nameservers}) | (first | keys_unsorted) as $keys | map([to_entries[] | .value]) as $rows | $keys,$rows[] | @csv' > zones-with-nameservers.csv
@@ -139,6 +140,8 @@ done
 ```
 
 ### Add the domain to Azure Front Door and enable HTTPS for the domain
+
+
 
 ```shell
 echo -e "\nADDING DOMAINS TO AZURE FRONT DOOR"
