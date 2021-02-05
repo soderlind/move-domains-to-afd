@@ -99,6 +99,7 @@ AFD_ROUTINGRULES="$AFD-routingrule httptohttps"
 KV="MY-KV"
 KV_ID=$(az keyvault list --resource-group $RG  | jq -r '[.[].id]|join("")')
 OLD_FRONTENDS=$(az network front-door frontend-endpoint list --resource-group $RG --front-door-name $AFD | jq -r '[.[].name]|join(" ")' )
+DNS_ZONES=$(az network dns zone list --resource-group $DNS_RG --query '[].name' | jq -r '.|join(" ")')
 OUTPUT="json" # Change to "none" to get less output
 ```
 
@@ -118,22 +119,26 @@ for SECRET_NAME in $snames; do
 
 		echo -e "\nUpdating $DOMAIN"
 		ZONE=$(echo $DOMAIN | rev | cut -d. -f1-2 | rev) # NOTE, I assume domain.tld, if you have domain.co.tld you have to change this.
-		if [[ $ZONE != $DOMAIN ]]; then
-			HOST=$(echo $DOMAIN | cut -d. -f1)
-			echo -e "\tHOST: finding record type for $HOST in zone $ZONE"
-			record_type=$(az network dns record-set list --resource-group $DNS_RG --zone-name $ZONE --query "[?name=='$HOST'].type" | jq -r '.|join("")|split("/")[-1]' )
-			echo -e "\tRecord type: $record_type"
-			if [[ "A" == $record_type ]]; then
-				echo -e "\tDELETE A-record"
-				az network dns record-set a delete --resource-group $DNS_RG --zone-name $ZONE --name $HOST --yes --output $OUTPUT
+
+		# If the domain in the certificate is in our Azure DNS, modify it.
+		if [[ $DNS_ZONES =~ (^|[[:space:]])$ZONE($|[[:space:]]) ]]; then
+			if [[ $ZONE != $DOMAIN ]]; then
+				HOST=$(echo $DOMAIN | cut -d. -f1)
+				echo -e "\tHOST: finding record type for $HOST in zone $ZONE"
+				record_type=$(az network dns record-set list --resource-group $DNS_RG --zone-name $ZONE --query "[?name=='$HOST'].type" | jq -r '.|join("")|split("/")[-1]' )
+				echo -e "\tRecord type: $record_type"
+				if [[ "A" == $record_type ]]; then
+					echo -e "\tDELETE A-record"
+					az network dns record-set a delete --resource-group $DNS_RG --zone-name $ZONE --name $HOST --yes --output $OUTPUT
+				fi
+				echo -e "\tCreate CNAME $HOST -> $AFD_HOST"
+				az network dns record-set cname set-record --resource-group $DNS_RG --zone-name $ZONE --record-set-name $HOST --cname $AFD_HOST --output $OUTPUT
+			else
+				echo -e "\tpoint @ to $AFD_HOST"
+				az network dns record-set a update --resource-group $DNS_RG --zone-name $ZONE --name "@"  --target-resource $AFD_ID --output $OUTPUT
+				echo -e "\tAdd CNAME afdverify -> afdverify.$AFD_HOST"
+				az network dns record-set cname set-record --resource-group $DNS_RG --zone-name $ZONE --record-set-name "afdverify" --cname "afdverify.${AFD_HOST}" --output $OUTPUT
 			fi
-			echo -e "\tCreate CNAME $HOST -> $AFD_HOST"
-			az network dns record-set cname set-record --resource-group $DNS_RG --zone-name $ZONE --record-set-name $HOST --cname $AFD_HOST --output $OUTPUT
-		else
-			echo -e "\tpoint @ to $AFD_HOST"
-			az network dns record-set a update --resource-group $DNS_RG --zone-name $ZONE --name "@"  --target-resource $AFD_ID --output $OUTPUT
-			echo -e "\tAdd CNAME afdverify -> afdverify.$AFD_HOST"
-			az network dns record-set cname set-record --resource-group $DNS_RG --zone-name $ZONE --record-set-name "afdverify" --cname "afdverify.${AFD_HOST}" --output $OUTPUT
 		fi
 	done
 done
