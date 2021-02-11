@@ -73,7 +73,7 @@ Function App (created when you installed keyvault-acmebot ):
 
 - Key Vault Certificate Permissions: Get, List, Update, Create
 
-You user:
+Your user:
 - Key Vault Secret Permissions: Get, List
 - Key Vault Certificate Permissions: Get, Lis
 
