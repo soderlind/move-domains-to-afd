@@ -17,8 +17,8 @@ DNS_ZONES=$(az network dns zone list --resource-group $DNS_RG --query '[].name' 
 OUTPUT="none"
 
 echo -e "\nUPDATING AZURE DNS"
-snames=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
-for SECRET_NAME in $snames; do
+SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
+for SECRET_NAME in $SECRET_NAMES; do
 	CUSTOMDOMAINS=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME | jq -r '.. | objects | select(.subjectAlternativeNames).subjectAlternativeNames.dnsNames |join(" ")')
 
 	for DOMAIN in  $CUSTOMDOMAINS; do
