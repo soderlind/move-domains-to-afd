@@ -146,12 +146,12 @@ done
 
 ### Add the domain to Azure Front Door and enable HTTPS for the domain
 
-
+In the keyvault, find the certificates and the domains in each certificate. Add the domain to the Azure Front Door and them attache the certificate to the domain, i.e. enable HTTPS.
 
 ```shell
 echo -e "\nADDING DOMAINS TO AZURE FRONT DOOR"
-snames=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
-for SECRET_NAME in $snames; do
+SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
+for SECRET_NAME in $SECRET_NAMES; do
 	DOMAINS_WITH_CERTS=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME | jq -r '.. | objects | select(.subjectAlternativeNames).subjectAlternativeNames.dnsNames |join(" ")')
 	SECRET_ID=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME |jq  -r '[.sid]|join("")|split("/")[-1]')
 	for DOMAIN_WITH_CERT in $DOMAINS_WITH_CERTS; do
@@ -171,6 +171,8 @@ done
 ```
 
 ### Add routing rules to Azure Front Door
+
+There's no command to append a rule to a Azure Front Door, so we get all front-ends, including the new ones and update the routing rules.
 
 ```shell
 echo -e "\nUPDATING AZURE FRONT DOOR ROUTING RULES"
