@@ -8,13 +8,15 @@ RG="MY-AFD-RG"
 DNS_RG="MY-DNS-RG"
 AFD="MY-FD"
 AFD_HOST="MY-FD.azurefd.net"
-AFD_ID=$(az network front-door show --resource-group $RG --name $AFD --query id -o tsv)
 AFD_ROUTINGRULES="$AFD-routingrule httptohttps"
 KV="MY-KV"
+OUTPUT="json" # Change to "none" to get less output
+
+# The variable below are set by the script.
+AFD_ID=$(az network front-door show --resource-group $RG --name $AFD --query id -o tsv)
 KV_ID=$(az keyvault list --resource-group $RG  | jq -r '[.[].id]|join("")')
 OLD_FRONTENDS=$(az network front-door frontend-endpoint list --resource-group $RG --front-door-name $AFD | jq -r '[.[].name]|join(" ")' )
 DNS_ZONES=$(az network dns zone list --resource-group $DNS_RG --query '[].name' | jq -r '.|join(" ")')
-OUTPUT="none"
 
 echo -e "\nUPDATING AZURE DNS"
 SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
