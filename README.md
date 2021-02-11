@@ -80,19 +80,15 @@ In your Azure Key Vault **Access Policies** set the following secret and certifi
 
 
 
+## Azure Front Door
 
+With the prerequisites in place, you're ready to add the domains to Azure Front Door.
 
-
-
-## Moving the domains to Azure Front Door
-
-I assume Azure Front Door is up and running and that you have created your routing rules.
-
-The script below will only update domains that are added to the Azure Key Vault .
+>I assume Azure Front Door is up and running, and that you have created your routing rules.
 
 ### Config
 
-I use these variables
+I use these variables, you have to replace them with your own.
 
 ```shell
 RG="MY-AFD-RG"
@@ -116,8 +112,8 @@ The script below does this for you:
 
 ```shell
 echo -e "\nUPDATING AZURE DNS"
-snames=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
-for SECRET_NAME in $snames; do
+SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
+for SECRET_NAME in $SECRET_NAMES; do
 	CUSTOMDOMAINS=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME | jq -r '.. | objects | select(.subjectAlternativeNames).subjectAlternativeNames.dnsNames |join(" ")')
 
 	for DOMAIN in  $CUSTOMDOMAINS; do
