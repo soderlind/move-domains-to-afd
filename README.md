@@ -55,11 +55,11 @@ az network dns zone list --resource-group MY-DNS-RG --output json | jq -r '[.[] 
 
 ### Certificates in Azure Key Vault
 
-Azure Front Door (AFD) [doesn't support AFD managed certificates](https://docs.microsoft.com/en-us/azure/frontdoor/front-door-how-to-onboard-apex-domain#enable-https-on-your-custom-domain) for the apex (root) domain :confused:, so you must bring your own certificates. I use [keyvault-acmebot](https://github.com/shibayan/keyvault-acmebot) and its [bulk add form](https://github.com/shibayan/keyvault-acmebot/issues/230#issuecomment-769638846) to create Let's Encrypt certificates.
+Azure Front Door (AFD) [doesn't support AFD managed certificates](https://docs.microsoft.com/en-us/azure/frontdoor/front-door-how-to-onboard-apex-domain#enable-https-on-your-custom-domain) for the apex (root) domain :confused:, so you must bring your own certificates. I use [Key Vault Acmebot](https://github.com/shibayan/keyvault-acmebot) and its [bulk add form](https://github.com/shibayan/keyvault-acmebot/issues/230#issuecomment-769638846) to create Let's Encrypt certificates.
 
 >**NOTE**, the Let's Encrypt SAN certificate doesn't support more than 100 domains, so don't add more at a time. I suggest you add 50 domains at a time.
 
-#### Azure Key Vault access policies
+#### Key Vault Acmebot and Azure Key Vault access policies
 
 You need to setup the right permissions for Front Door to access your Key vault:
 
