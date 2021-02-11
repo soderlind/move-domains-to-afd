@@ -108,8 +108,6 @@ OUTPUT="json" # Change to "none" to get less output
 
 The apex domain (`@`) must be aliased and pointed to the Azure Front Door. To verify ownership of the domain, a `afdverify` CNAME must be added. If the host/subdomain previously had an A record and pointed to an IP address, it must be changed to a CNAME pointing to the front door.
 
-The script below does this for you:
-
 ```shell
 echo -e "\nUPDATING AZURE DNS"
 SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
