@@ -61,7 +61,7 @@ Azure Front Door (AFD) [doesn't support AFD managed certificates](https://docs.m
 
 #### Key Vault Acmebot and Azure Key Vault access policies
 
-After [installing Key Vault Acmebot](https://github.com/shibayan/keyvault-acmebot#getting-started), you need to setup the right permissions for Front Door to access your Key vault:
+After [installing Key Vault Acmebot](https://github.com/shibayan/keyvault-acmebot#getting-started), you need to setup the right permissions for Front Door to access your key vault:
 
 - Register Azure Front Door Service as an app in your Azure Active Directory (AAD) via PowerShell using this command:
 `New-AzADServicePrincipal -ApplicationId "ad0e1c7e-6d38-4ba4-9efd-0bc77ba9f037"`.
