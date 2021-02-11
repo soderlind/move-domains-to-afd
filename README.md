@@ -67,7 +67,7 @@ After [installing Key Vault Acmebot](https://github.com/shibayan/keyvault-acmebo
 `New-AzADServicePrincipal -ApplicationId "ad0e1c7e-6d38-4ba4-9efd-0bc77ba9f037"`.
 - Grant Azure Front Door Service the permission to access the secrets in your Key vault. Go to “Access policies” from your Key vault to add a new policy, then grant “Microsoft.Azure.Frontdoor” service principal a “get-secret” permission.
 
-In your Azure Key Vault Access Policies set the following access policies
+In your Azure Key Vault **Access Policies** set the following secret and certificate permissions:
 
 - Microsoft.Azure.Frontdoor (APPLICATION)
   - Secret Permissions: Get
