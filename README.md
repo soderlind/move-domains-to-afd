@@ -146,7 +146,7 @@ done
 
 ### Add the domain to Azure Front Door and enable HTTPS for the domain
 
-In the keyvault, find the certificates and the domains in each certificate. Add the domain to the Azure Front Door and them attache the certificate to the domain, i.e. enable HTTPS.
+In the keyvault, find the certificates and the domains in each certificate. Add the domain to the Azure Front Door and then attache the certificate to the domain, i.e. enable HTTPS.
 
 ```shell
 echo -e "\nADDING DOMAINS TO AZURE FRONT DOOR"
