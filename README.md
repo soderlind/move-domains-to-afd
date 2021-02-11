@@ -71,7 +71,7 @@ Microsoft.Azure.Frontdoor
   - Key Vault Secret Permissions: Get
   - Key Vault Certificate Permissions: Get
 
-Function App (created when you installed keyvault-acmebot ):
+Function App (created when you installed keyvault-acmebot):
 
 - Key Vault Certificate Permissions: Get, List, Update, Create
 
