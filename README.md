@@ -15,7 +15,7 @@ Or install
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), aka `az`
 - [jq](https://stedolan.github.io/jq/), a lightweight and flexible command-line JSON processor.
 
-Add the Azure Front Door CLI extension
+Add the Azure Front Door CLI extension:
 
 `az extension add --name front-door`
 
