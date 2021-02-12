@@ -185,6 +185,13 @@ for RULE in $AFD_ROUTINGRULES; do
 done
 ```
 
+### Scripts
+
+The shell script examples above, are from
+
+- [import-zones.sh](https://github.com/soderlind/move-domains-to-afd/blob/main/import-zones.sh)
+- [move-domains-to-afd.sh](https://github.com/soderlind/move-domains-to-afd/blob/main/move-domains-to-afd.sh)
+
 ## Copyright and License
 
 move-domains-to-afd.sh is copyright 2021 Per Soderlind
