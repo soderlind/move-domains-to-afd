@@ -84,7 +84,9 @@ In your Azure Key Vault **Access Policies** set the following secret and certifi
 
 With the prerequisites in place, you're ready to add the domains to Azure Front Door.
 
->I assume Azure Front Door is up and running, and that you have created your routing rules.
+> NOTE:
+> - I assume Azure Front Door is up and running, and that you have created your routing rules.
+> - Only domains with a certificate in your key vault will be added.
 
 ### Config
 
