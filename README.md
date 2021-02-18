@@ -2,7 +2,7 @@
 
 I manage a WordPress Multisite and when migrating it to Azure, I had to move more than 100 domains.
 
->I highly recommend that you test the scripts below on your test platform in Azure before you do it in production, and please read the disclaimer at the end of this document.
+>**NOTE:** I highly recommend that you test the scripts below on your test platform in Azure before you do it in production, and please [read the disclaimer](#copyright-and-license) at the end of this document.
 
 ## Prerequisite
 
@@ -62,7 +62,7 @@ az network dns zone list --resource-group MY-DNS-RG --output json | jq -r '[.[] 
 
 Azure Front Door (AFD) [doesn't support AFD managed certificates](https://docs.microsoft.com/en-us/azure/frontdoor/front-door-how-to-onboard-apex-domain#enable-https-on-your-custom-domain) for the apex (root) domain :confused:, so you must bring your own certificates. I use [Key Vault Acmebot](https://github.com/shibayan/keyvault-acmebot) and its [bulk add form](https://github.com/shibayan/keyvault-acmebot/issues/230#issuecomment-769638846) to create Let's Encrypt certificates.
 
->**NOTE**, the Let's Encrypt SAN certificate doesn't support more than 100 domains, so don't add more at a time. I suggest you add 50 domains at a time.
+>**NOTE**: The Let's Encrypt SAN certificate doesn't support more than 100 domains, so don't add more at a time. I suggest you add 50 domains at a time.
 
 #### Key Vault Acmebot, Azure Key Vault and Azure Front Door access policies
 
@@ -90,7 +90,7 @@ After [installing Key Vault Acmebot](https://github.com/shibayan/keyvault-acmebo
 
 With the prerequisites in place, you're ready to add the domains to Azure Front Door.
 
-> NOTE:
+> **NOTE:**
 > - I assume Azure Front Door is up and running, and that you have created your routing rules.
 > - Only domains with a certificate in your key vault will be added.
 
