@@ -2,7 +2,7 @@
 
 I manage a WordPress Multisite and when migrating it to Azure, I had to move more than 100 domains.
 
-I highly recommend that you test the scripts below on your test platform in Azure before you do it in production, and please read the disclaimer at the end of this document.
+>I highly recommend that you test the scripts below on your test platform in Azure before you do it in production, and please read the disclaimer at the end of this document.
 
 ## Prerequisite
 
@@ -86,7 +86,7 @@ After [installing Key Vault Acmebot](https://github.com/shibayan/keyvault-acmebo
 
 
 
-## Azure Front Door
+## Add domains to Azure Front Door
 
 With the prerequisites in place, you're ready to add the domains to Azure Front Door.
 
