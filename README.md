@@ -64,7 +64,7 @@ Azure Front Door (AFD) [doesn't support AFD managed certificates](https://docs.m
 
 >**NOTE**, the Let's Encrypt SAN certificate doesn't support more than 100 domains, so don't add more at a time. I suggest you add 50 domains at a time.
 
-#### Key Vault Acmebot and Azure Key Vault access policies
+#### Key Vault Acmebot, Azure Key Vault and Azure Front Door access policies
 
 After [installing Key Vault Acmebot](https://github.com/shibayan/keyvault-acmebot#getting-started), you need to setup the right permissions for Front Door to access your key vault:
 
