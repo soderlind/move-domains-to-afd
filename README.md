@@ -22,6 +22,8 @@ Add the Azure Front Door CLI extension:
 
 ### Domains must be moved to Azure DNS.
 
+> Azure Front Door only support apex (naked) domains when they are in Azure DNS.
+
 I moved the domains using the following script
 
 - Add 3 sub folders, `ok`, `failed` and `zones`. In `zones`, add a zone file per domain in the format `domain.tld`. If the import fails for a zone file, it lands in `failed`. Fix the file and put it back into `zones` and run the script again.
