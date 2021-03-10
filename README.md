@@ -22,7 +22,7 @@ Add the Azure Front Door CLI extension:
 
 ### Domains must be moved to Azure DNS.
 
-> Azure Front Door only support apex (naked) domains when they are in Azure DNS.
+> [Azure Front Door only support apex (naked) domains](https://docs.microsoft.com/en-us/azure/frontdoor/front-door-how-to-onboard-apex-domain#enable-https-on-your-custom-domain) when they are in Azure DNS.
 
 I moved the domains using the following script
 
