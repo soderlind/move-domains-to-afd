@@ -10,7 +10,7 @@ source config.sh
 az config set extension.use_dynamic_install=yes_without_prompt
 
 # The variable below are set by the script.
-AFD_ID=$(az network front-door show --subscription "$SUBSCRIPTION" --resource-group $RG --name $AFD --query id -o tsv)
+
 KV_ID=$(az keyvault list --subscription "$SUBSCRIPTION" --resource-group $RG  | jq -r '[.[].id]|join("")')
 OLD_FRONTENDS=$(az network front-door frontend-endpoint list --subscription "$SUBSCRIPTION" --resource-group $RG --front-door-name $AFD | jq -r '[.[].name]|join(" ")' )
 DNS_ZONES=$(az network dns zone list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --query '[].name' | jq -r '.|join(" ")')
@@ -43,7 +43,8 @@ for SECRET_NAME in $SECRET_NAMES; do
 			else
 				i=$((i+1))
 				AFD_NR=$(($i%6 + 1))
-				AFD_HOST="p-wordpress-fd0$AFD_NR"
+				AFD_NAME="p-wordpress-fd0$AFD_NR"
+				AFD_ID=$(az network front-door show --subscription "$SUBSCRIPTION" --resource-group $RG --name $AFD_NAME --query id -o tsv)
 				echo -e "\tAPEX domain, point @ to $AFD_HOST"
 				az network dns record-set a update --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE --name "@"  --target-resource $AFD_ID --output $OUTPUT
 				echo -e "\tAdd CNAME afdverify -> afdverify.$AFD_HOST"
