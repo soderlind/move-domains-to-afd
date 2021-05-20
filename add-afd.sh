@@ -28,6 +28,7 @@ for SECRET_NAME in $SECRET_NAMES; do
 			AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE  --query "[?name=='$HOST'].cnameRecord.cname" -o tsv)
 		else
 			AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE --query "[?name=='@'].targetResource.id" | jq -r '.|join("")|split("/")[-1]')
+			ADF="$AFD.azurefd.net"
 		fi
 		is_validated_domain=$(az network front-door check-custom-domain --subscription "$SUBSCRIPTION" --resource-group $RG  --name $AFD --host-name $DOMAIN_WITH_CERT --query customDomainValidated)
 		if [[ "true" == $is_validated_domain  ]]; then
