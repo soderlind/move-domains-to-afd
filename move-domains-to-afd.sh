@@ -36,8 +36,9 @@ for SECRET_NAME in $SECRET_NAMES; do
 
 			i=$((i+1))
 			AFD_NR=$(($i%6 + 1))
-			AFD_HOST="p-wordpress-fd0$AFD_NR.azurefd.net"
-			AFD_ID=$(az network front-door show --subscription "$SUBSCRIPTION" --resource-group $RG --name $AFD_HOST --query id -o tsv)
+			AFD="p-wordpress-fd0$AFD_NR"
+			AFD_="$AFD.azurefd.net"
+			AFD_ID=$(az network front-door show --subscription "$SUBSCRIPTION" --resource-group $RG --name $AFD --query id -o tsv)
 
 			if [[ $ZONE != $DOMAIN ]]; then
 				HOST=$(echo $DOMAIN | cut -d. -f1)
