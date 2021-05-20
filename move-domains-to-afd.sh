@@ -74,7 +74,7 @@ for SECRET_NAME in $SECRET_NAMES; do
 			if [[ ! $OLD_FRONTENDS =~ (^|[[:space:]])$FRONTENDPOINT($|[[:space:]]) ]]; then
 				ZONE=$(echo $DOMAIN_WITH_CERT | rev | cut -d. -f1-2 | rev)
 				if [[ $ZONE != $DOMAIN_WITH_CERT ]]; then
-					HOST=$(echo $DOMAIN | cut -d. -f1)
+					HOST=$(echo $DOMAIN_WITH_CERT | cut -d. -f1)
 					$AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE  --query "[?name=='$HOST'].cnameRecord.cname" -o tsv)
 				else
 					$AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE --query "[?name=='@'].targetResource.id" | jq -r '.|join("")|split("/")[-1]')
