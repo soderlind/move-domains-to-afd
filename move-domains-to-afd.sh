@@ -30,7 +30,7 @@ for SECRET_NAME in $SECRET_NAMES; do
 
 			FRONTENDPOINT="$(echo $DOMAIN | tr "." "-")-frontend-endpoint"
 			if [[  $OLD_FRONTENDS =~ (^|[[:space:]])$FRONTENDPOINT($|[[:space:]]) ]]; then
-				echo -n "Skipping, $DOMAIN already in AFD"
+				echo -n "\tSkipping, $DOMAIN already in AFD"
 				continue
 			fi
 
@@ -68,17 +68,17 @@ for SECRET_NAME in $SECRET_NAMES; do
 	DOMAINS_WITH_CERTS=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME | jq -r '.. | objects | select(.subjectAlternativeNames).subjectAlternativeNames.dnsNames |join(" ")')
 	SECRET_ID=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME |jq  -r '[.sid]|join("")|split("/")[-1]')
 	for DOMAIN_WITH_CERT in $DOMAINS_WITH_CERTS; do
+		ZONE=$(echo $DOMAIN_WITH_CERT | rev | cut -d. -f1-2 | rev)
+		if [[ $ZONE != $DOMAIN_WITH_CERT ]]; then
+			HOST=$(echo $DOMAIN_WITH_CERT | cut -d. -f1)
+			AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE  --query "[?name=='$HOST'].cnameRecord.cname" -o tsv)
+		else
+			AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE --query "[?name=='@'].targetResource.id" | jq -r '.|join("")|split("/")[-1]')
+		fi
 		is_validated_domain=$(az network front-door check-custom-domain --subscription "$SUBSCRIPTION" --resource-group $RG  --name $AFD --host-name $DOMAIN_WITH_CERT --query customDomainValidated)
 		if [[ "true" == $is_validated_domain  ]]; then
 			FRONTENDPOINT="$(echo $DOMAIN_WITH_CERT | tr "." "-")-frontend-endpoint"
 			if [[ ! $OLD_FRONTENDS =~ (^|[[:space:]])$FRONTENDPOINT($|[[:space:]]) ]]; then
-				ZONE=$(echo $DOMAIN_WITH_CERT | rev | cut -d. -f1-2 | rev)
-				if [[ $ZONE != $DOMAIN_WITH_CERT ]]; then
-					HOST=$(echo $DOMAIN_WITH_CERT | cut -d. -f1)
-					AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE  --query "[?name=='$HOST'].cnameRecord.cname" -o tsv)
-				else
-					AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE --query "[?name=='@'].targetResource.id" | jq -r '.|join("")|split("/")[-1]')
-				fi
 
 				echo -e "\tAdding domain $DOMAIN_WITH_CERT to Front Door\n"
 				az network front-door frontend-endpoint create --subscription "$SUBSCRIPTION" --resource-group $RG --front-door-name $AFD --name $FRONTENDPOINT --host-name $DOMAIN_WITH_CERT --output $OUTPUT
