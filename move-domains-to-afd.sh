@@ -5,6 +5,11 @@
 set -e
 
 source config.sh
+# The variable below are set by the script.
+AFD_ID=$(az network front-door show --resource-group $RG --name $AFD --query id -o tsv)
+KV_ID=$(az keyvault list --resource-group $RG  | jq -r '[.[].id]|join("")')
+OLD_FRONTENDS=$(az network front-door frontend-endpoint list --resource-group $RG --front-door-name $AFD | jq -r '[.[].name]|join(" ")' )
+DNS_ZONES=$(az network dns zone list --resource-group $DNS_RG --query '[].name' | jq -r '.|join(" ")')
 
 echo -e "\nUPDATING AZURE DNS"
 SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
