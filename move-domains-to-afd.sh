@@ -27,6 +27,18 @@ for SECRET_NAME in $SECRET_NAMES; do
 
 		# If the domain in the certificate is in our Azure DNS, modify it.
 		if [[ $DNS_ZONES =~ (^|[[:space:]])$ZONE($|[[:space:]]) ]]; then
+
+			if [[ $BLACK_LIST =~ (^|[[:space:]])$ZONE($|[[:space:]]) ]]; then
+				echo -e "\tBLACKLISTED, DO NOTHING to $ZONE"
+				continue
+			fi
+
+			i=$((i+1))
+			AFD_NR=$(($i%6 + 1))
+			AFD_HOST="p-wordpress-fd0$AFD_NR"
+			AFD_ID=$(az network front-door show --subscription "$SUBSCRIPTION" --resource-group $RG --name $AFD_HOST --query id -o tsv)
+
+
 			if [[ $ZONE != $DOMAIN ]]; then
 				HOST=$(echo $DOMAIN | cut -d. -f1)
 				echo -e "\tHOST: finding record type for $HOST in zone $ZONE"
@@ -38,13 +50,7 @@ for SECRET_NAME in $SECRET_NAMES; do
 				fi
 				echo -e "\tCreate CNAME $HOST -> $AFD_HOST"
 				az network dns record-set cname set-record --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE --record-set-name $HOST --cname $AFD_HOST --output $OUTPUT
-			elif [[ $BLACK_LIST =~ (^|[[:space:]])$ZONE($|[[:space:]]) ]]; then
-				echo -e "\tBLACKLISTED, DO NOTHING to $ZONE"
 			else
-				i=$((i+1))
-				AFD_NR=$(($i%6 + 1))
-				AFD_NAME="p-wordpress-fd0$AFD_NR"
-				AFD_ID=$(az network front-door show --subscription "$SUBSCRIPTION" --resource-group $RG --name $AFD_NAME --query id -o tsv)
 				echo -e "\tAPEX domain, point @ to $AFD_HOST"
 				az network dns record-set a update --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE --name "@"  --target-resource $AFD_ID --output $OUTPUT
 				echo -e "\tAdd CNAME afdverify -> afdverify.$AFD_HOST"
