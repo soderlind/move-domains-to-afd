@@ -1,3 +1,8 @@
+#!/usr/bin/bash
+#
+# Read the doc at https://github.com/soderlind/move-domains-to-afd/blob/main/README.md
+#
+set -e
 
 source config.sh
 
