@@ -33,9 +33,10 @@ for SECRET_NAME in $SECRET_NAMES; do
 		if [[ $ZONE != $DOMAIN_WITH_CERT ]]; then
 			HOST=$(echo $DOMAIN_WITH_CERT | cut -d. -f1)
 			AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE  --query "[?name=='$HOST'].cnameRecord.cname" -o tsv)
+			AFD=$(echo $AFD | cut -d. -f1)
 		else
 			AFD=$(az network dns record-set list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE --query "[?name=='@'].targetResource.id" | jq -r '.|join("")|split("/")[-1]')
-			AFD="$AFD.azurefd.net"
+
 		fi
 
 		echo -e "\tAdding domain $DOMAIN_WITH_CERT to Front Door\n"
