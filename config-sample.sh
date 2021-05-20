@@ -4,6 +4,7 @@
 #
 set -e
 
+SUBSCRIPTION="My Subscription"
 RG="MY-AFD-RG"
 DNS_RG="MY-DNS-RG"
 AFD="MY-FD"
