@@ -33,6 +33,11 @@ for SECRET_NAME in $SECRET_NAMES; do
 				continue
 			fi
 
+			FRONTENDPOINT="$(echo $DOMAIN | tr "." "-")-frontend-endpoint"
+			if [[  $OLD_FRONTENDS =~ (^|[[:space:]])$FRONTENDPOINT($|[[:space:]]) ]]; then
+				continue
+			fi
+
 			i=$((i+1))
 			AFD_NR=$(($i%6 + 1))
 			AFD_HOST="p-wordpress-fd0$AFD_NR"
