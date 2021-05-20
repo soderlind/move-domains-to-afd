@@ -14,7 +14,7 @@ AFD_ID=$(az network front-door show --subscription "$SUBSCRIPTION" --resource-gr
 KV_ID=$(az keyvault list --subscription "$SUBSCRIPTION" --resource-group $RG  | jq -r '[.[].id]|join("")')
 OLD_FRONTENDS=$(az network front-door frontend-endpoint list --subscription "$SUBSCRIPTION" --resource-group $RG --front-door-name $AFD | jq -r '[.[].name]|join(" ")' )
 DNS_ZONES=$(az network dns zone list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --query '[].name' | jq -r '.|join(" ")')
-
+i=0
 
 echo -e "\nUPDATING AZURE DNS"
 SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
@@ -41,6 +41,9 @@ for SECRET_NAME in $SECRET_NAMES; do
 			elif [[ $BLACK_LIST =~ (^|[[:space:]])$ZONE($|[[:space:]]) ]]; then
 				echo -e "\tBLACKLISTED, DO NOTHING to $ZONE"
 			else
+				i=$((i+1))
+				AFD_NR=$(($i%6 + 1))
+				AFD_HOST="p-wordpress-fd0$AFD_NR"
 				echo -e "\tAPEX domain, point @ to $AFD_HOST"
 				az network dns record-set a update --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --zone-name $ZONE --name "@"  --target-resource $AFD_ID --output $OUTPUT
 				echo -e "\tAdd CNAME afdverify -> afdverify.$AFD_HOST"
