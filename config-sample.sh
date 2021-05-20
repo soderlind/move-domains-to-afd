@@ -4,7 +4,7 @@
 #
 set -e
 
-SUBSCRIPTION="My Subscription"
+SUBSCRIPTION="subscrition id or name" #I recommend that you use the subscription id.
 RG="MY-AFD-RG"
 DNS_RG="MY-DNS-RG"
 AFD="MY-FD"
