@@ -19,7 +19,7 @@ echo -e "\nADDING DOMAINS TO AZURE FRONT DOOR"
 SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
 for SECRET_NAME in $SECRET_NAMES; do
 	# DOMAINS_WITH_CERTS=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME | jq -r '.. | objects | select(.subjectAlternativeNames).subjectAlternativeNames.dnsNames |join(" ")')
-	DOMAINS_WITH_CERTS="www.xn--ansvarlignringsliv-xub.no xn--ansvarlignringsliv-xub.no www.xn--distriktsnringsutvalget-i9b.no xn--distriktsnringsutvalget-i9b.no"
+	DOMAINS_WITH_CERTS="www.xn--distriktsnringsutvalget-i9b.no xn--distriktsnringsutvalget-i9b.no"
 	SECRET_ID=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME |jq  -r '[.sid]|join("")|split("/")[-1]')
 	for DOMAIN_WITH_CERT in $DOMAINS_WITH_CERTS; do
 
