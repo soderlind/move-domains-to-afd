@@ -18,7 +18,8 @@ DNS_ZONES="semuligheter.no www.semuligheter.no snowpark.no www.snowpark.no unive
 echo -e "\nADDING DOMAINS TO AZURE FRONT DOOR"
 SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
 for SECRET_NAME in $SECRET_NAMES; do
-	DOMAINS_WITH_CERTS=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME | jq -r '.. | objects | select(.subjectAlternativeNames).subjectAlternativeNames.dnsNames |join(" ")')
+	# DOMAINS_WITH_CERTS=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME | jq -r '.. | objects | select(.subjectAlternativeNames).subjectAlternativeNames.dnsNames |join(" ")')
+	DOMAINS_WITH_CERTS="semuligheter.no www.semuligheter.no snowpark.no www.snowpark.no universitetsoghoyskolelovutvalget.no www.universitetsoghoyskolelovutvalget.no valglovutvalget.no www.valglovutvalget.no varslerutvalget.no www.varslerutvalget.no varslingsutvalget.no www.varslingsutvalget.no www.xn--ansvarlignringsliv-xub.no xn--ansvarlignringsliv-xub.no"
 	SECRET_ID=$(az keyvault certificate show --vault-name $KV --name $SECRET_NAME |jq  -r '[.sid]|join("")|split("/")[-1]')
 	for DOMAIN_WITH_CERT in $DOMAINS_WITH_CERTS; do
 
