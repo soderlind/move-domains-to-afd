@@ -12,8 +12,8 @@ az config set extension.use_dynamic_install=yes_without_prompt
 # The variable below are set by the script.
 
 KV_ID=$(az keyvault list --subscription "$SUBSCRIPTION" --resource-group $RG  | jq -r '[.[].id]|join("")')
-DNS_ZONES=$(az network dns zone list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --query '[].name' | jq -r '.|join(" ")')
-
+# DNS_ZONES=$(az network dns zone list --subscription "$SUBSCRIPTION" --resource-group $DNS_RG --query '[].name' | jq -r '.|join(" ")')
+DNS_ZONES="semuligheter.no www.semuligheter.no snowpark.no www.snowpark.no universitetsoghoyskolelovutvalget.no www.universitetsoghoyskolelovutvalget.no valglovutvalget.no www.valglovutvalget.no varslerutvalget.no www.varslerutvalget.no varslingsutvalget.no www.varslingsutvalget.no www.xn--ansvarlignringsliv-xub.no xn--ansvarlignringsliv-xub.no"
 
 echo -e "\nADDING DOMAINS TO AZURE FRONT DOOR"
 SECRET_NAMES=$(az keyvault certificate list --vault-name $KV | jq -r '[.[].name]|join(" ")')
